@@ -35,6 +35,7 @@ class Arena {
 
     sweep() {
         let rowCount = 1;
+        let score = 0;
         outer: for (let y = this.matrix.length - 1; y > 0; --y) {
             for (let x = 0; x < this.matrix[y].length; ++x) {
                 if (this.matrix[y][x] === 0) {
@@ -45,9 +46,10 @@ class Arena {
             this.matrix.unshift(row);
             ++y;
 
-            player.score += rowCount * 10;
+            score += rowCount * 10;
             rowCount *= 2;
         }
+        return score;
     };
 
 }
