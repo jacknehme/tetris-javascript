@@ -25,19 +25,17 @@
 </head>
 
 <body>
-    <div class="player">
-        <div class="score"></div>
-        <canvas player="tetris" width="240" height="400"></canvas>
-    </div>
-
-    <div class="player">
-        <div class="score"></div>
-        <canvas player="tetris" width="240" height="400"></canvas>
-    </div>
+    <template id="player-template">
+        <div class="player">
+            <div class="score"></div>
+            <canvas class="tetris" width="240" height="400"></canvas>
+        </div>
+    </template>
 
     <script src="Arena.js"></script>
     <script src="Player.js"></script>
     <script src="Tetris.js"></script>
+    <script src="TetrisManager.js"></script>
     <script src="main.js"></script>
 
 </body>
