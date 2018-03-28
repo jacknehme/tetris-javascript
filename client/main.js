@@ -1,6 +1,9 @@
 const tetrisManager = new TetrisManager(document);
 const localTetris = tetrisManager.createPlayer();
 
+const connectionManager = new ConnectionManager();
+connectionManager.connect('ws://localhost:9000');
+
 const keyListener = (event => {
     [
         [65, 68, 81, 69, 83],
