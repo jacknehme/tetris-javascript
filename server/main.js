@@ -6,8 +6,8 @@ const server = new WebSocketServer({ port: 9000 });
 
 const sessions = new Map;
 
-function createId(len = 6, chars = 'abcdefghjkmnopqrstwxyz0123456789') {
-    let id = "";
+function createId(len = 6, chars = 'abcdefghjkmnopqrstwxyz01234567890') {
+    let id = '';
     while (len--) {
         id += chars[Math.random() * chars.length | 0];
     }
@@ -20,7 +20,7 @@ function createClient(conn, id = createId()) {
 
 function createSession(id = createId()) {
     if (sessions.has(id)) {
-        throw new Error(`Session ${id} already exits`);
+        throw new Error(`Session ${id} already exists`);
     }
 
     const session = new Session(id);
@@ -42,10 +42,15 @@ function broadcastSession(session) {
             type: 'session-broadcast',
             peers: {
                 you: client.id,
-                clients: clients.map(client => client.id),
+                clients: clients.map(client => {
+                    return {
+                        id: client.id,
+                        state: client.state,
+                    }
+                }),
             },
         });
-    })
+    });
 }
 
 server.on('connection', conn => {
@@ -58,7 +63,9 @@ server.on('connection', conn => {
 
         if (data.type === 'create-session') {
             const session = createSession();
-            session.join(client)
+            session.join(client);
+
+            client.state = data.state;
             client.send({
                 type: 'session-created',
                 id: session.id,
@@ -67,8 +74,11 @@ server.on('connection', conn => {
             const session = getSession(data.id) || createSession(data.id);
             session.join(client);
 
+            client.state = data.state;
             broadcastSession(session);
-        } else if(data.type === 'state-update'){
+        } else if (data.type === 'state-update') {
+            const [key, value] = data.state;
+            client.state[data.fragment][key] = value;
             client.broadcast(data);
         }
     });
@@ -84,5 +94,6 @@ server.on('connection', conn => {
         }
 
         broadcastSession(session);
+        console.log(sessions);
     });
-})
+});

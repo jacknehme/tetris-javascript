@@ -5,7 +5,7 @@ class Session {
     }
     join(client) {
         if (client.session) {
-            throw new Error('Client already in sesion');
+            throw new Error('Client already in session');
         }
         this.clients.add(client);
         client.session = this;

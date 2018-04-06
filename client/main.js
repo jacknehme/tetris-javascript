@@ -1,17 +1,16 @@
 const tetrisManager = new TetrisManager(document);
-const localTetris = tetrisManager.createPlayer();
-localTetris.element.classList.add('local');
-localTetris.run();
+const tetrisLocal = tetrisManager.createPlayer();
+tetrisLocal.element.classList.add('local');
+tetrisLocal.run();
 
 const connectionManager = new ConnectionManager(tetrisManager);
 connectionManager.connect('ws://localhost:9000');
 
-const keyListener = (event => {
+const keyListener = (event) => {
     [
         [65, 68, 81, 69, 83],
-        [72, 75, 89, 73, 74],
     ].forEach((key, index) => {
-        const player = localTetris.player;
+        const player = tetrisLocal.player;
         if (event.type === 'keydown') {
             if (event.keyCode === key[0]) {
                 player.move(-1);
@@ -35,7 +34,7 @@ const keyListener = (event => {
         }
 
     });
-});
+};
 
 document.addEventListener('keydown', keyListener);
 document.addEventListener('keyup', keyListener);
